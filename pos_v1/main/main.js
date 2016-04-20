@@ -4,13 +4,12 @@ function printReceipt(inputs) {
   var promotions = loadPromotions();
 
   var cartItems = buildCartItems(inputs, allItems);
-
-
+    console.log(cartItems);
   var receiptItems = getReceiptItems(promotions, cartItems);
-
+    console.log(receiptItems);
   var receipt = getReceipt(receiptItems);
+  console.log(receipt);
 
-  var receiptText = toReceiptText(receipt);
 }
 
 function buildCartItems(inputs, allItems) {
@@ -111,6 +110,3 @@ function getReceipt(receiptItems) {
 }
 
 
-function toReceiptText(receipt) {
- console.log(receipt);
-}
