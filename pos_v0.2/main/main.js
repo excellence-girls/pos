@@ -1,90 +1,96 @@
 function printReceipt(inputs) {
-   var allItems = loadAllItems();	
-  
-   var items = buildItems(inputs,allItems);
+   var allItems = loadAllItems();
+   var cartItems = buildCartItems(inputs,allItems);
 
-   var cartItems = getCartItems(items);
-   var receiptItems = getReceiptItems(cartItems);
-   var receipt = getReceipt(receiptItems);
-   var receiptText = toReceiptText(receipt);
+   var receiptItems = buildReceiptItems(cartItems);
+   console.log(receiptItems);
+   var receipt = buidReceipt(receiptItems);
+
+   var receiptText = printReceiptText(receipt);
+
+
+   console.log(receiptText);
  }
 
-function buildItems(inputs,allItems){
-	 var items = [];
-   inputs.forEach(function(input){
-     var barcode = findItemBarcode(input,allItems);
-         if(barcode)
-           	{ items.push(barcode);}
-   }); 
-   return items;
-}
+function buildCartItems(inputs, allItems) {
+  var cartItems = [];
 
-function findItemBarcode(input,allItems){
-	var flag;
-  allItems.forEach(function(items){
-    if(items.barcode === input)
-                  {flag = items;}
+  inputs.forEach(function (input) {
+    var item = findItem(input, allItems);
+    var cartItem = findCartItem(input, cartItems);
+
+    if (cartItem) {
+      cartItem.count++;
+    }else {
+      cartItems.push({item: item, count:1});
+    }
   });
-  if(flag)
-  { return flag;}
-  else
-  { return false;}
-}    
 
-function getCartItems(items) {
-  var cartItems = [] ;
-  items.forEach(function(item) {
-   var cartItem =findCartItem(item.barcode, cartItems);
-   if(cartItem)
-    { cartItem.count++;}
-   else
-    { cartItems.push({item:item,count:1});}  
-});
   return cartItems;
 }
- 
 
- function findCartItem(barcode, cartItems) {
-  var flag ;
-   cartItems.forEach(function(cartItem){
-    if(cartItem.item.barcode === barcode)
-      {flag = cartItem;}
-    
-   });
-    if(flag)
-     {return  flag ;}
-    else
-      { return false ;}
-   
-}   
+function findCartItem(barcode, items) {
+  var flag;
 
- function getReceiptItems(cartItems) {
-  var receiptItems = [] ;
-  var total = 0;
-  cartItems.forEach(function(cartItem){
-     cartItem.item.subtotal = cartItem.item.price * cartItem.count;
-    total+=cartItem.item.subtotal ;
+  for (var i = 0; i < items.length; i++) {
+    if (items[i].item.barcode === barcode) {
+      flag = items[i];
+    }
+  }
 
+  return flag;
+}
+
+function findItem(barcode, allItems) {
+  var flag = false;
+
+  allItems.forEach(function (items) {
+    if (items.barcode === barcode) {
+      flag = items;
+    }
   });
-  receiptItems.push({ items: cartItems, total: total }); 
+
+  return flag;
+}
+
+
+function buildReceiptItems(cartItems) {
+  var receiptItems = [];
+  var subTotal = 0;
+
+  cartItems.forEach(function (cartItem) {
+      subTotal= cartItem.item.price * cartItem.count;
+     receiptItems.push({cartItems:cartItem,subTotal:subTotal});
+  });
+
   return receiptItems;
 }
-  
 
-function getReceipt(receiptItems) {
-  var receipt = '';
-  receiptItems[0].items.forEach(function(receiptItem){
-  receipt+= '名称：' + receiptItem.item.name + '，数量：' + receiptItem.count +
-   receiptItem.item.unit + '，单价：' + receiptItem.item.price.toFixed(2)+ '(元)，小计：' +
-  receiptItem.item.subtotal.toFixed(2) + '(元)\n';
-});
- receipt = '***<没钱赚商店>收据***\n' +  receipt + '----------------------\n' + '总计：' +
-  receiptItems[0].total.toFixed(2) + '(元)\n' + '**********************';
-  return receipt;
-}
+  function buidReceipt(receiptItems){
+    var receipt ={receiptItems:receiptItems,total:0};
 
+    receiptItems.forEach(function(receiptItem){
+      receipt.total+= receiptItem.subTotal;
+    });
 
+    return receipt;
 
-function toReceiptText(receipt) {
- console.log(receipt);
-}
+  }
+
+  function printReceiptText(receipt) {
+    var receiptText = '';
+
+    receipt.receiptItems.forEach(function (receiptItem){
+      receiptText += '名称：' + receiptItem.cartItems.item.name + '，数量：' + receiptItem.cartItems.count +
+        receiptItem.cartItems.item.unit + '，单价：' + receiptItem.cartItems.item.price.toFixed(2) + '(元)，小计：' +
+        receiptItem.subTotal.toFixed(2) + '(元)\n';
+    });
+
+    receiptText = '***<没钱赚商店>收据***\n' +
+      receiptText
+      + '----------------------\n'
+      + '总计：'+ receipt.total.toFixed(2) +'(元)\n'
+      + '**********************';
+
+    return receiptText;
+  }

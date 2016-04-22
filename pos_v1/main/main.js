@@ -109,7 +109,7 @@ function buidReceipt(receiptItems){
 }
 function printReceiptText(receipt) {
   var receiptText = '';
-  
+
   receipt.receiptItems.forEach(function (receiptItem){
     receiptText += '名称：' + receiptItem.cartItem.item.name + '，数量：' + receiptItem.cartItem.count +
       receiptItem.cartItem.item.unit + '，单价：' + receiptItem.cartItem.item.price.toFixed(2) + '(元)，小计：' +
