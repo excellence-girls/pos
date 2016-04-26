@@ -2,9 +2,9 @@ function printReceipt(inputs) {
 
   var receiptItems = buildReceiptItems(inputs);
 
-  var receipts =buildReceipt(receiptItems)
+  var receipt = buildReceipt(receiptItems)
 
-  var receiptText = printReceiptText(receipts);
+  var receiptText = printReceiptText(receipt);
 
   console.log(receiptText);
 }
@@ -15,29 +15,29 @@ function buildReceiptItems(cartItems) {
   var subTotal = 0;
 
   cartItems.forEach(function (cartItem) {
-    subTotal= cartItem.price * cartItem.count;
-    receiptItems.push({cartItems:cartItem,subTotal:subTotal});
+    subTotal = cartItem.price * cartItem.count;
+    receiptItems.push({cartItems: cartItem, subTotal: subTotal});
   });
 
   return receiptItems;
 }
 
 
-function buildReceipt(receiptItems){
-  var receipts ={receiptItems:receiptItems,total:0};
+function buildReceipt(receiptItems) {
+  var receipt = {receiptItems: receiptItems, total: 0};
 
-  receiptItems.forEach(function(receiptItem){
-    receipts.total+= receiptItem.subTotal;
+  receiptItems.forEach(function (receiptItem) {
+    receipt.total += receiptItem.subTotal;
   });
 
-  return receipts;
-
+  return receipt;
 }
 
-function printReceiptText(receipts) {
+
+function printReceiptText(receipt) {
   var receiptText = '';
 
-  receipts.receiptItems.forEach(function (receiptItem){
+  receipt.receiptItems.forEach(function (receiptItem) {
     receiptText += '名称：' + receiptItem.cartItems.name + '，数量：' + receiptItem.cartItems.count +
       receiptItem.cartItems.unit + '，单价：' + receiptItem.cartItems.price.toFixed(2) + '(元)，小计：' +
       receiptItem.subTotal.toFixed(2) + '(元)\n';
@@ -46,7 +46,7 @@ function printReceiptText(receipts) {
   receiptText = '***<没钱赚商店>收据***\n' +
     receiptText
     + '----------------------\n'
-    + '总计：'+ receipts.total.toFixed(2) +'(元)\n'
+    + '总计：' + receipt.total.toFixed(2) + '(元)\n'
     + '**********************';
 
   return receiptText;
