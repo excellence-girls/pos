@@ -22,7 +22,7 @@ describe('pos', function() {
      it('return buildCartItems:', function () {
        allItems = loadAllItems();
 
-      var cartItems= buildCartItems(inputs,allItems);
+       var cartItems= buildCartItems(inputs,allItems);
 
        var expectText =[
          {item: {barcode: 'ITEM000001', name: '雪碧', unit: '瓶', price: 3}, count: 5},
@@ -37,21 +37,32 @@ describe('pos', function() {
      it('return buildReceiptItems:', function () {
 
        promotions = loadPromotions();
-       var cartItems= buildCartItems(inputs,allItems);
+
+       var cartItems= [
+         {item: {barcode: 'ITEM000001', name: '雪碧', unit: '瓶', price: 3}, count: 5},
+         {item: {barcode: 'ITEM000003', name: '荔枝', unit: '斤', price: 15}, count: 2},
+         {item: {barcode: 'ITEM000005', name: '方便面', unit: '袋', price: 4.5}, count: 3}];
+
        var receiptItems =buildReceiptItems(promotions,cartItems);
 
-       var expectText =[
+       var expectTect=[
          {cartItem:{item: {barcode: 'ITEM000001', name: '雪碧', unit: '瓶', price: 3}, count: 5}, savingSubTotal: 3, subTotal: 12},
          {cartItem:{item: {barcode: 'ITEM000003', name: '荔枝', unit: '斤', price: 15}, count: 2}, savingSubTotal: 0, subTotal: 30},
          {cartItem:{item: {barcode: 'ITEM000005', name: '方便面', unit: '袋', price: 4.5}, count: 3}, savingSubTotal: 4.5, subTotal: 9}];
-       expect(receiptItems).toEqual(expectText);
+
+
+       expect(receiptItems).toEqual(expectTect);
      });
    });
    describe('buidReceipt test', function () {
 
      it('return buidReceipt:', function () {
-       var cartItems= buildCartItems(inputs,allItems);
-       var receiptItems =buildReceiptItems(promotions,cartItems);
+
+       var receiptItems =[
+         {cartItem:{item: {barcode: 'ITEM000001', name: '雪碧', unit: '瓶', price: 3}, count: 5}, savingSubTotal: 3, subTotal: 12},
+         {cartItem:{item: {barcode: 'ITEM000003', name: '荔枝', unit: '斤', price: 15}, count: 2}, savingSubTotal: 0, subTotal: 30},
+         {cartItem:{item: {barcode: 'ITEM000005', name: '方便面', unit: '袋', price: 4.5}, count: 3}, savingSubTotal: 4.5, subTotal: 9}];
+
        var receipt = buidReceipt(receiptItems);
 
 
